@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第17回 パルスサーベイ 結果報告｜株式会社Ai.Connect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&family=Noto+Sans+JP:wght@400;500;600;700&family=Zen+Antique&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F4EFE3;
+    --paper:#FFFFFF;
+    --forest:#1F3D33;
+    --forest-deep:#142821;
+    --forest-mid:#2E5245;
+    --gold:#C6952F;
+    --gold-soft:#E7C77A;
+    --rust:#AC4A3A;
+    --rust-soft:#F3D9CE;
+    --ink:#1C1B17;
+    --ink-soft:#5B564C;
+    --line:rgba(28,27,23,0.14);
+    --line-invert:rgba(255,255,255,0.18);
+    --radius:2px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:"Noto Sans JP",sans-serif;
+    line-height:1.75;
+    font-size:15px;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.num,.eyebrow{font-family:"Zen Kaku Gothic New",sans-serif;}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 32px;}
+  .eyebrow{
+    font-size:11px;letter-spacing:.18em;font-weight:700;
+    color:var(--gold);text-transform:uppercase;
+  }
+  a{color:inherit;}
+
+  /* ===== HERO ===== */
+  .hero{
+    background:
+      radial-gradient(circle at 88% -6%, rgba(198,149,47,0.28), transparent 42%),
+      linear-gradient(155deg, var(--forest) 0%, var(--forest-deep) 78%);
+    color:#F4EFE3;
+    padding:76px 0 56px;
+    position:relative;
+    overflow:hidden;
+    border-bottom:6px solid var(--gold);
+  }
+  .hero::before{
+    content:"";
+    position:absolute;right:-120px;top:-140px;
+    width:420px;height:420px;border-radius:50%;
+    background:rgba(231,199,122,0.10);
+  }
+  .hero .wrap{position:relative;z-index:2;}
+  .hero .eyebrow{color:var(--gold-soft);}
+  .hero h1{
+    font-size:clamp(34px,5vw,54px);
+    font-weight:900;
+    margin:14px 0 6px;
+    line-height:1.25;
+    letter-spacing:.01em;
+  }
+  .hero .org{
+    font-size:19px;font-weight:700;margin-top:20px;
+  }
+  .hero .period{
+    font-size:13px;color:#C9D2C9;margin-top:4px;
+  }
+  .hero-stats{
+    display:grid;grid-template-columns:1fr 1fr;gap:14px;
+    margin-top:36px;
+  }
+  .stat-card{
+    background:rgba(255,255,255,0.06);
+    border:1px solid var(--line-invert);
+    padding:20px 22px;border-radius:var(--radius);
+    backdrop-filter:blur(2px);
+  }
+  .stat-card.accent{
+    background:linear-gradient(135deg,var(--gold) 0%,#B27F27 100%);
+    border-color:transparent;color:#241A05;
+  }
+  .stat-label{font-size:11px;letter-spacing:.1em;font-weight:700;opacity:.85;}
+  .stat-num{font-size:40px;font-weight:900;margin-top:6px;}
+  .stat-num sup{font-size:16px;font-weight:600;margin-left:4px;opacity:.75;}
+  .stat-sub{font-size:12px;margin-top:4px;opacity:.8;}
+
+  /* ===== SECTION SHELL ===== */
+  section{padding:56px 0;}
+  section.on-cream{background:var(--cream);}
+  section.on-paper{background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .section-head{margin-bottom:32px;}
+  .section-head h2{font-size:26px;font-weight:900;margin:6px 0 0;}
+  .section-head p{color:var(--ink-soft);font-size:13.5px;margin-top:6px;max-width:560px;}
+
+  /* ===== OVERVIEW GRID ===== */
+  .overview-grid{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:36px;
+  }
+  .ov-card{
+    background:var(--paper);border:1px solid var(--line);
+    padding:22px 20px;border-radius:var(--radius);
+  }
+  .ov-card .num{font-size:34px;font-weight:900;color:var(--forest);}
+  .ov-card .label{font-size:12px;color:var(--ink-soft);margin-top:6px;}
+
+  .highlight-pair{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .hi-card{padding:22px 22px;border-radius:var(--radius);}
+  .hi-card.best{background:var(--forest);color:#F4EFE3;}
+  .hi-card.worst{background:var(--rust);color:#fff;}
+  .hi-card .tag{font-size:11px;letter-spacing:.12em;font-weight:700;opacity:.85;text-transform:uppercase;}
+  .hi-card .q-text{font-size:15px;font-weight:700;margin:10px 0 8px;}
+  .hi-card .q-num{font-size:26px;font-weight:900;}
+  .hi-card .q-diff{font-size:12px;opacity:.85;margin-top:2px;}
+
+  /* ===== BAR COMPARISON ===== */
+  .bar-legend{display:flex;gap:18px;font-size:12px;color:var(--ink-soft);margin-bottom:18px;}
+  .bar-legend span{display:inline-flex;align-items:center;gap:6px;}
+  .swatch{width:12px;height:12px;border-radius:2px;display:inline-block;}
+  .swatch.now{background:var(--forest);}
+  .swatch.prev{background:var(--gold-soft);}
+
+  .qbar-row{display:grid;grid-template-columns:52px 1fr 84px;gap:14px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line);}
+  .qbar-row:last-child{border-bottom:none;}
+  .qbar-label{font-weight:700;font-size:13px;color:var(--ink-soft);}
+  .qbar-track{position:relative;height:20px;background:rgba(28,27,23,0.05);border-radius:3px;}
+  .qbar-fill{position:absolute;top:0;left:0;height:100%;border-radius:3px;background:var(--forest);}
+  .qbar-fill.prev{background:transparent;border:2px dashed var(--gold);height:20px;top:0;}
+  .qbar-diff{font-size:12px;text-align:right;font-weight:700;}
+  .qbar-diff.up{color:#2E7D4F;}
+  .qbar-diff.down{color:var(--rust);}
+
+  /* ===== DISTRIBUTION ===== */
+  .dist-stack{display:flex;height:40px;border-radius:4px;overflow:hidden;border:1px solid var(--line);}
+  .dist-seg{display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:700;}
+  .dist-key{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:16px;font-size:12px;text-align:center;color:var(--ink-soft);}
+  .dist-key .n{font-size:18px;font-weight:900;color:var(--ink);display:block;}
+
+  /* ===== TABLE ===== */
+  table{width:100%;border-collapse:collapse;font-size:13px;}
+  th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--line);}
+  th{font-size:11px;letter-spacing:.06em;color:var(--ink-soft);font-weight:700;text-transform:uppercase;}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
+  tr td.diff-up{color:#2E7D4F;font-weight:700;}
+  tr td.diff-down{color:var(--rust);font-weight:700;}
+  .table-scroll{overflow-x:auto;}
+
+  /* ===== ACCORDION (Q1-Q10 DETAIL) ===== */
+  .acc-item{border:1px solid var(--line);border-radius:var(--radius);margin-bottom:10px;background:var(--paper);overflow:hidden;}
+  .acc-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 20px;cursor:pointer;user-select:none;
+  }
+  .acc-head:hover{background:rgba(198,149,47,0.06);}
+  .acc-head .qid{font-weight:900;color:var(--gold);font-size:13px;margin-right:12px;}
+  .acc-head .qtext{font-size:14px;font-weight:600;flex:1;}
+  .acc-head .qavg{font-weight:900;font-size:18px;color:var(--forest);margin-left:14px;}
+  .acc-head .chev{margin-left:14px;transition:transform .2s ease;color:var(--ink-soft);}
+  .acc-item.open .chev{transform:rotate(180deg);}
+  .acc-body{max-height:0;overflow:hidden;transition:max-height .25s ease;}
+  .acc-item.open .acc-body{max-height:600px;}
+  .acc-inner{padding:0 20px 20px;font-size:13px;}
+  .acc-meta{display:flex;gap:22px;flex-wrap:wrap;color:var(--ink-soft);font-size:12px;margin-bottom:14px;}
+  .acc-meta b{color:var(--ink);}
+  .mini-dist{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:14px;}
+  .mini-dist .seg{background:rgba(28,27,23,0.05);border-radius:3px;padding:8px 6px;text-align:center;}
+  .mini-dist .seg .c{font-weight:900;font-size:16px;display:block;}
+  .mini-dist .seg .l{font-size:10px;color:var(--ink-soft);}
+  .name-groups{display:grid;grid-template-columns:1fr;gap:6px;font-size:12px;color:var(--ink-soft);}
+  .name-groups .grp b{color:var(--ink);margin-right:6px;}
+
+  /* ===== Q11 ===== */
+  .note-card{
+    background:var(--forest);color:#F4EFE3;
+    padding:22px 24px;border-radius:var(--radius);font-size:13.5px;
+  }
+  .note-card b{color:var(--gold-soft);}
+
+  /* ===== CLOSING ===== */
+  .closing{background:var(--forest-deep);color:#F4EFE3;padding:64px 0;}
+  .closing .eyebrow{color:var(--gold-soft);}
+  .closing h2{font-size:30px;font-weight:900;margin:8px 0 6px;}
+  .closing .lead{color:#C9D2C9;font-size:13.5px;margin-bottom:32px;}
+  .insight-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .insight-card{padding:26px 22px;border-radius:var(--radius);}
+  .insight-card:nth-child(1){background:#F4EFE3;color:var(--ink);}
+  .insight-card:nth-child(2){background:var(--gold);color:#241A05;}
+  .insight-card:nth-child(3){background:var(--rust);color:#fff;}
+  .insight-card .no{font-size:36px;font-weight:900;opacity:.9;}
+  .insight-card h3{font-size:16px;font-weight:900;margin:10px 0 10px;}
+  .insight-card p{font-size:12.5px;line-height:1.7;margin:0 0 8px;}
+  .insight-card p b{font-weight:900;}
+
+  footer{
+    background:var(--forest-deep);color:#8FA398;
+    padding:20px 0 34px;font-size:11px;letter-spacing:.08em;
+    text-transform:uppercase;border-top:1px solid rgba(255,255,255,0.08);
+  }
+
+  @media (max-width:760px){
+    .wrap{padding:0 20px;}
+    .hero-stats,.overview-grid,.highlight-pair,.insight-grid{grid-template-columns:1fr;}
+    .qbar-row{grid-template-columns:40px 1fr 60px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HERO / COVER ===== -->
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Pulse Survey · Report</div>
+    <h1>第17回 パルスサーベイ<br>結果報告</h1>
+    <div class="org">株式会社 Ai.Connect</div>
+    <div class="period">調査期間：2026/07/01 〜 2026/07/15</div>
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-label">回答率</div>
+        <div class="stat-num">86<sup>%</sup></div>
+        <div class="stat-sub">37 / 43 名が回答</div>
+      </div>
+      <div class="stat-card accent">
+        <div class="stat-label">総合平均（Q1-Q10）</div>
+        <div class="stat-num">3.21<sup>/ 5</sup></div>
+        <div class="stat-sub">前回比 +0.06</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ===== 01 OVERVIEW ===== -->
+<section class="on-cream">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">01 · Overview</div>
+      <h2>全体の概況</h2>
+    </div>
+    <div class="overview-grid">
+      <div class="ov-card">
+        <div class="num">86%</div>
+        <div class="label">回答率（回答者37名 / 対象43名）</div>
+      </div>
+      <div class="ov-card">
+        <div class="num">3.21<span style="font-size:16px;">/5</span></div>
+        <div class="label">総合平均（Q1〜Q10） 前回 3.15 → 今回</div>
+      </div>
+      <div class="ov-card">
+        <div class="num">+0.06</div>
+        <div class="label">改善スコア（前回比・微増）</div>
+      </div>
+    </div>
+
+    <div class="highlight-pair">
+      <div class="hi-card best">
+        <div class="tag">最も高い項目</div>
+        <div class="q-text">Q5 上司や同僚はあなたのことを気にかけてくれている</div>
+        <div class="q-num">3.70 <span style="font-size:14px;">/ 5</span></div>
+        <div class="q-diff">前回比 +0.11</div>
+      </div>
+      <div class="hi-card worst">
+        <div class="tag">最も低い項目</div>
+        <div class="q-text">Q10 業務を通して学び成長できたと実感している</div>
+        <div class="q-num">2.81 <span style="font-size:14px;">/ 5</span></div>
+        <div class="q-diff">前回比 −0.14（唯一の悪化）</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 02 COMPARISON ===== -->
+<section class="on-paper">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">02 · Q1–Q10 Comparison</div>
+      <h2>今回と前回のスコア比較</h2>
+      <p>回答スコアは1〜5の5段階評価。棒の長さは各設問の平均値、破線は前回スコアの位置を示す。</p>
+    </div>
+    <div class="bar-legend">
+      <span><i class="swatch now"></i>今回</span>
+      <span><i class="swatch prev"></i>前回</span>
+    </div>
+    <div id="qbar-chart"></div>
+  </div>
+</section>
+
+<!-- ===== 03 TABLE ===== -->
+<section class="on-cream">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">03 · Score Table</div>
+      <h2>設問別スコア一覧</h2>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>設問</th><th class="num">今回</th><th class="num">前回</th><th class="num">差分</th></tr></thead>
+        <tbody id="score-table-body"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 04 DISTRIBUTION ===== -->
+<section class="on-paper">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">04 · Distribution</div>
+      <h2>全設問のスコア分布</h2>
+      <p>Q1〜Q10 合計値の分布（370件）。最も多いのは「4（そう思う）」で131件・35.4%。肯定的評価（4＋5）は169件・45.7%、中立的評価（3）は106件・28.6%、否定的評価（1＋2）は95件・25.7%。</p>
+    </div>
+    <div class="dist-stack">
+      <div class="dist-seg" style="width:10.3%;background:var(--forest);">10.3%</div>
+      <div class="dist-seg" style="width:35.4%;background:var(--forest-mid);">35.4%</div>
+      <div class="dist-seg" style="width:28.6%;background:var(--gold);">28.6%</div>
+      <div class="dist-seg" style="width:15.9%;background:#D99A6C;">15.9%</div>
+      <div class="dist-seg" style="width:9.7%;background:var(--rust);">9.7%</div>
+    </div>
+    <div class="dist-key">
+      <div><span class="n">38</span>スコア5</div>
+      <div><span class="n">131</span>スコア4</div>
+      <div><span class="n">106</span>スコア3</div>
+      <div><span class="n">59</span>スコア2</div>
+      <div><span class="n">36</span>スコア1</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 05 DETAIL ACCORDION ===== -->
+<section class="on-cream">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">05 · Question Detail</div>
+      <h2>設問別 詳細（Q1〜Q10）</h2>
+      <p>設問をクリックすると、平均値・スコア分布・回答者名簿（原文）が展開されます。</p>
+    </div>
+    <div id="accordion"></div>
+  </div>
+</section>
+
+<!-- ===== 06 Q11 ===== -->
+<section class="on-paper">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">06 · Q11 · Free Text</div>
+      <h2>自由記述の集計</h2>
+      <p>「その他、気になる点、不明点や疑問点などがございましたら、自由に記載してください」への回答（全37名）</p>
+    </div>
+    <div class="note-card">
+      <b>Q11の提出内容は、全て数字のみ（1〜5の単一スコア値）でした。</b><br>
+      テキストによる意見・質問の記載はなく、各回答者のQ1〜Q10と同形式の単一数値が入力されています。設問の主旨（自由記述）と齟齬があるため、次回は自由記述欄として機能する設計への改善を候補として提起します。
+      <div style="margin-top:10px;font-size:12px;opacity:.8;">有効回答 37名 / 未回答 6名</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 07 INDIVIDUAL LIST ===== -->
+<section class="on-cream">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">07 · Individual Scores</div>
+      <h2>回答者 個別スコア（抜粋）</h2>
+      <p>今回平均（Q1-Q10）／前回平均／差分。差分の絶対値で並び替え（抜粋26名中・上位23名を表示）。</p>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead><tr><th>#</th><th>氏名</th><th>所属</th><th class="num">今回</th><th class="num">前回</th><th class="num">差分</th></tr></thead>
+        <tbody id="individual-table-body"></tbody>
+      </table>
+    </div>
+    <p style="font-size:11.5px;color:var(--ink-soft);margin-top:10px;">末尾：差分の絶対値最大（小林 亮則 −0.8）。</p>
+  </div>
+</section>
+
+<!-- ===== CLOSING ===== -->
+<section class="closing">
+  <div class="wrap">
+    <div class="eyebrow">Closing · Summary</div>
+    <h2>今後に向けた示唆</h2>
+    <div class="lead">第17回 パルスサーベイ結果から読み取れる3つのポイント</div>
+    <div class="insight-grid">
+      <div class="insight-card">
+        <div class="no">01</div>
+        <h3>人と信頼の強さ</h3>
+        <p>Q5（上司・同僚の関心）が<b>3.70</b>と最も高いスコア。人と組織のつながりは引き続き強み。</p>
+        <p>スコア5の回答者は秋山 綾佑・日向野 有紀・村山 喜隆を含む9名。</p>
+      </div>
+      <div class="insight-card">
+        <div class="no">02</div>
+        <h3>評価・賞賛の土壌改善</h3>
+        <p>Q4（成果への評価）が<b>+0.17</b>で最大改善。フィードバック文化が進展。</p>
+        <p>一方、Q4の1〜2評価者は11名（30%）存在し、現場差は依然大きい。</p>
+      </div>
+      <div class="insight-card">
+        <div class="no">03</div>
+        <h3>成長実感の後退</h3>
+        <p>Q10（学習・成長）が<b>−0.14</b>で唯一の悪化。Q9（成果満足）も平均2.86と低水準。</p>
+        <p>スコア1が7名（小林 亮則・鷲尾 享之・吉田 愛美ら）に集中しており要対話。</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">Pulse Survey · Volume 17 · 2026.07 · Internal / Confidential</div>
+</footer>
+
+<script>
+const QUESTIONS = [
+  {id:"Q1",text:"あなたは仕事で何を期待されているか、ちゃんと理解できている。",now:3.62,prev:3.58,diff:"+0.06",
+   dist:[3,23,6,4,1],
+   groups:[["5",["秋山 綾佑","日向野 有紀","村山 喜隆"]],
+           ["4",["稲葉 滉平","宇賀神 ひとみ","枝村 美珠希","大墨 光","大関 篤志","大塚 将貴","奥平 光寛","河本 大地","近内 愛実","佐伯 翔太","篠崎 朋幸","注連内 克憲","菅原 麻美","高田 亜祐美","高田 滉己","髙荷 悟","竹岡 友希","田島 雅人","坪山 祥子","宮本 大輔"]],
+           ["3",["小林 亮則","後関 千春","坪山 祥子","長谷川 卓","堀居 亮介","安永 篤史"]],
+           ["2",["小島 望空","菅井 滋紀","田端 ラファエル","吉田 愛美"]],
+           ["1",["鷲尾 享之"]]]},
+  {id:"Q2",text:"会社全体の方向性や目標をちゃんと理解できている。",now:3.27,prev:3.17,diff:"+0.11",
+   dist:[2,17,11,3,4],
+   groups:[["5",["秋山 綾佑","日向野 有紀"]],
+           ["4",["宇賀神 ひとみ","枝村 美珠希","大墨 光","大関 篤志","奥平 光寛","河本 大地","近内 愛実","佐伯 翔太","注連内 克憲","菅原 麻美","高田 亜祐美","高田 滉己","髙荷 悟","竹岡 友希","村山 喜隆","大塚 将貴"]],
+           ["3",["稲葉 滉平","大塚 将貴","小林 亮則","篠崎 朋幸","坪山 祥子","堀居 亮介","宮本 大輔","大関 篤志","菅原 麻美","奥平 光寛","枝村 美珠希"]],
+           ["2",["後関 千春","菅井 滋紀","田端 ラファエル"]],
+           ["1",["小島 望空","篠崎 朋幸","吉田 愛美","鷲尾 享之"]]]},
+  {id:"Q3",text:"成果を生み出すための環境が整っている。",now:3.11,prev:3.03,diff:"+0.08",
+   dist:[2,11,16,5,3],
+   groups:[["5",["日向野 有紀","村山 喜隆"]],
+           ["4",["秋山 綾佑","宇賀神 ひとみ","枝村 美珠希","大塚 将貴","河本 大地","近内 愛実","佐伯 翔太","菅原 麻美","高田 滉己","髙荷 悟","竹岡 友希"]],
+           ["3",["稲葉 滉平","大墨 光","大関 篤志","奥平 光寛","篠崎 朋幸","注連内 克憲","高田 亜祐美","坪山 祥子","堀本 敬久","藤野 俊一","長谷川 卓","堀居 亮介","宮本 大輔","安永 篤史","大塚 将貴","日向野 有紀"]],
+           ["2",["小島 望空","菅井 滋紀","田端 ラファエル","長野 誠","野瀧 真一"]],
+           ["1",["篠崎 朋幸","吉田 愛美","鷲尾 享之"]]]},
+  {id:"Q4",text:"直近1カ月において成果に対する評価や賞賛を得られた。",now:3.05,prev:2.89,diff:"+0.17（最大改善）",
+   dist:[2,12,12,8,3],
+   groups:[["5",["日向野 有紀","村山 喜隆"]],
+           ["4",["秋山 綾佑","宇賀神 ひとみ","枝村 美珠希","大塚 将貴","奥平 光寛","近内 愛実","注連内 克憲","菅原 麻美","高田 亜祐美","高田 滉己","宮本 大輔","髙荷 悟"]],
+           ["3",["大墨 光","大関 篤志","河本 大地","佐伯 翔太","坪山 祥子","竹岡 友希","堀居 亮介","後関 千春","大塚 将貴","菅原 麻美","髙荷 悟","奥平 光寛"]],
+           ["2",["稲葉 滉平","小島 望空","小林 亮則","菅井 滋紀","田端 ラファエル","長谷川 卓","堀本 敬久","吉田 愛美"]],
+           ["1",["篠崎 朋幸","野瀧 真一","鷲尾 享之"]]]},
+  {id:"Q5",text:"上司や同僚はあなたのことを気にかけてくれている。",now:3.70,prev:3.61,diff:"+0.11（全設問中最高）",
+   dist:[9,13,11,3,1],
+   groups:[["5",["秋山 綾佑","宇賀神 ひとみ","枝村 美珠希","大塚 将貴","奥平 光寛","近内 愛実","菅原 麻美","高田 亜祐美","村山 喜隆"]],
+           ["4",["稲葉 滉平","大墨 光","大関 篤志","河本 大地","佐伯 翔太","竹岡 友希","注連内 克憲","坪山 祥子","宮本 大輔","日向野 有紀","髙荷 悟","奥平 光寛","近内 愛実"]],
+           ["3",["河本 大地","後関 千春","篠崎 朋幸","菅井 滋紀","高田 滉己","田島 雅人","堀居 亮介","大塚 将貴","枝村 美珠希","注連内 克憲","大墨 光"]],
+           ["2",["野瀧 真一","長谷川 卓","吉田 愛美"]],
+           ["1",["鷲尾 享之"]]]},
+  {id:"Q6",text:"直近1ヵ月の体調は良好である。",now:3.30,prev:3.22,diff:"+0.11",
+   dist:[8,9,10,6,4],
+   groups:[["5",["秋山 綾佑","河本 大地","佐伯 翔太","菅原 麻美","高田 亜祐美","高田 滉己","日向野 有紀","村山 喜隆"]],
+           ["4",["宇賀神 ひとみ","枝村 美珠希","大墨 光","注連内 克憲","髙荷 悟","堀居 亮介","宮本 大輔","近内 愛実","奥平 光寛"]],
+           ["3",["稲葉 滉平","篠崎 朋幸","注連内 克憲","坪山 祥子","田島 雅人","近内 愛実","堀本 敬久","髙荷 悟","宇賀神 ひとみ","大塚 将貴"]],
+           ["2",["大塚 将貴","小島 望空","野瀧 真一","長谷川 卓","藤野 俊一","安永 篤史"]],
+           ["1",["後関 千春","篠崎 朋幸","坪山 祥子","鷲尾 享之"]]]},
+  {id:"Q7",text:"株式会社Ai.Connectは効率的かつ健全な事業運営を行っている。",now:3.16,prev:3.08,diff:"+0.08",
+   dist:[3,14,9,8,3],
+   groups:[["5",["大墨 光","日向野 有紀","村山 喜隆"]],
+           ["4",["秋山 綾佑","宇賀神 ひとみ","枝村 美珠希","大塚 将貴","奥平 光寛","河本 大地","近内 愛実","菅原 麻美","高田 滉己","髙荷 悟","竹岡 友希","宮本 大輔","奥平 光寛","坪山 祥子"]],
+           ["3",["稲葉 滉平","大関 篤志","佐伯 翔太","安永 篤史","注連内 克憲","堀居 亮介","宮本 大輔","高田 滉己","奥平 光寛"]],
+           ["2",["小島 望空","小林 亮則","後関 千春","篠崎 朋幸","高田 亜祐美","田端 ラファエル","野瀧 真一","藤野 俊一"]],
+           ["1",["菅井 滋紀","吉田 愛美","鷲尾 享之"]]]},
+  {id:"Q8",text:"株式会社Ai.ConnectのMVVは業務に対する意義を感じさせてくれる。",now:3.16,prev:3.08,diff:"+0.08",
+   dist:[4,13,9,7,4],
+   groups:[["5",["大墨 光","坪山 祥子","日向野 有紀","村山 喜隆"]],
+           ["4",["秋山 綾佑","宇賀神 ひとみ","枝村 美珠希","大塚 将貴","奥平 光寛","河本 大地","近内 愛実","菅原 麻美","高田 滉己","髙荷 悟","宮本 大輔","奥平 光寛","注連内 克憲"]],
+           ["3",["稲葉 滉平","大関 篤志","佐伯 翔太","安永 篤史","注連内 克憲","堀居 亮介","宮本 大輔","高田 滉己","奥平 光寛"]],
+           ["2",["小島 望空","小林 亮則","後関 千春","篠崎 朋幸","高田 亜祐美","田端 ラファエル","長野 誠"]],
+           ["1",["菅井 滋紀","藤野 俊一","吉田 愛美","鷲尾 享之"]]]},
+  {id:"Q9",text:"直近1カ月の業務の結果や成果に対して満足している。",now:2.86,prev:2.83,diff:"+0.03",
+   dist:[3,8,13,7,6],
+   groups:[["5",["秋山 綾佑","日向野 有紀","村山 喜隆"]],
+           ["4",["宇賀神 ひとみ","枝村 美珠希","大塚 将貴","奥平 光寛","河本 大地","高田 滉己","髙荷 悟","宮本 大輔"]],
+           ["3",["大墨 光","大関 篤志","佐伯 翔太","篠崎 朋幸","菅井 滋紀","菅原 麻美","高田 亜祐美","坪山 祥子","注連内 克憲","堀居 亮介","田島 雅人","近内 愛実","奥平 光寛"]],
+           ["2",["稲葉 滉平","小島 望空","小林 亮則","後関 千春","田端 ラファエル","藤野 俊一","堀本 敬久"]],
+           ["1",["篠崎 朋幸","菅井 滋紀","野瀧 真一","長谷川 卓","吉田 愛美","鷲尾 享之"]]]},
+  {id:"Q10",text:"直近1カ月を振り返り、業務を通して学び、成長できたと実感している。",now:2.81,prev:2.97,diff:"−0.14（唯一の悪化・要注意）",
+   dist:[2,11,9,8,7],
+   groups:[["5",["日向野 有紀","村山 喜隆"]],
+           ["4",["秋山 綾佑","宇賀神 ひとみ","枝村 美珠希","大塚 将貴","河本 大地","近内 愛実","菅原 麻美","高田 滉己","髙荷 悟","宮本 大輔","奥平 光寛"]],
+           ["3",["大墨 光","大関 篤志","佐伯 翔太","篠崎 朋幸","菅井 滋紀","櫻井 滋紀","坪山 祥子","田島 雅人","竹岡 友希"]],
+           ["2",["大関 篤志","小島 望空","小林 亮則","後関 千春","注連内 克憲","田端 ラファエル","堀本 敬久","安永 篤史"]],
+           ["1",["篠崎 朋幸","菅井 滋紀","野瀧 真一","長谷川 卓","藤野 俊一","吉田 愛美","鷲尾 享之"]]]}
+];
+
+const SCORE_TABLE = [
+  ["Q1","3.62","3.58","+0.06"],["Q2","3.27","3.17","+0.11"],["Q3","3.11","3.03","+0.08"],
+  ["Q4","3.05","2.89","+0.17"],["Q5","3.70","3.61","+0.11"],["Q6","3.30","3.22","+0.11"],
+  ["Q7","3.16","3.08","+0.08"],["Q8","3.16","3.08","+0.08"],["Q9","2.86","2.83","+0.03"],
+  ["Q10","2.81","2.97","−0.14"]
+];
+
+const INDIVIDUALS = [
+  [1,"竹岡 友希","アイネット事業本部／事業管理部／営業事務課","3.40","2.40","+1.0"],
+  [2,"秋山 綾佑","アイネット事業本部／営業部／営業2課","4.10","3.40","+0.7"],
+  [3,"宇賀神 ひとみ","アイネット事業本部／ITS部／オペレーション","4.00","3.60","+0.4"],
+  [4,"小島 望空","アイネット事業本部／事業管理部／施工管理課","2.10","1.70","+0.4"],
+  [5,"篠崎 朋幸","経営企画本部／管理部","1.70","1.30","+0.4"],
+  [6,"菅原 麻美","アイネット事業本部／事業管理部／営業事務課","3.80","3.40","+0.4"],
+  [7,"長谷川 卓","アイネット事業本部／営業部／営業1課","2.30","1.90","+0.4"],
+  [8,"河本 大地","アイネット事業本部／営業部","4.20","3.90","+0.3"],
+  [9,"注連内 克憲","アイネット事業本部／ITS部","3.40","3.10","+0.3"],
+  [10,"近内 愛実","アイネット事業本部／事業管理部／営業事務課","3.50","3.30","+0.2"],
+  [11,"奥平 光寛","アイネット事業本部","3.80","3.70","+0.1"],
+  [12,"高田 滉己","アイネット事業本部","4.20","4.10","+0.1"],
+  [13,"日向野 有紀","アイネット事業本部","4.90","4.80","+0.1"],
+  [14,"稲葉 滉平","アイネット事業本部","3.10","3.00","+0.1"],
+  [15,"宮本 大輔","アイネット事業本部","3.90","3.90","±0.0"],
+  [16,"髙荷 悟","執行役員","3.80","3.90","±0.0"],
+  [17,"大塚 将貴","経営企画本部／管理部／請求業務課","3.80","3.90","−0.1"],
+  [18,"佐伯 翔太","アイネット事業本部／ITS部／エンジニア","3.50","3.60","−0.1"],
+  [19,"坪山 祥子","経営企画本部／総務部／人事総務課","3.50","3.60","−0.1"],
+  [20,"堀居 亮介","アイネット事業本部／営業部／営業4課","3.00","3.10","−0.1"],
+  [21,"堀本 敬久","アイネット事業本部／営業部／営業1課","2.90","3.00","−0.1"],
+  [22,"大墨 光","アイネット事業本部／事業管理部／施工管理課","4.10","4.30","−0.2"],
+  [23,"田島 雅人","アイネット事業本部／事業管理部","3.70","3.90","−0.2"]
+];
+
+function diffClass(d){ return d.trim().startsWith("−") || d.trim().startsWith("-") ? "diff-down" : "diff-up"; }
+
+// --- Q1-10 bar comparison ---
+const chart = document.getElementById("qbar-chart");
+QUESTIONS.forEach(q=>{
+  const row = document.createElement("div");
+  row.className = "qbar-row";
+  const nowPct = (q.now/5*100).toFixed(1);
+  const prevPct = (q.prev/5*100).toFixed(1);
+  const cls = q.diff.trim().startsWith("−") ? "down" : "up";
+  row.innerHTML = `
+    <div class="qbar-label">${q.id}</div>
+    <div class="qbar-track">
+      <div class="qbar-fill" style="width:${nowPct}%"></div>
+      <div class="qbar-fill prev" style="width:${prevPct}%"></div>
+    </div>
+    <div class="qbar-diff ${cls}">${q.diff.split("（")[0]}</div>
+  `;
+  chart.appendChild(row);
+});
+
+// --- score table ---
+const tbody = document.getElementById("score-table-body");
+SCORE_TABLE.forEach(r=>{
+  const cls = diffClass(r[3]);
+  tbody.innerHTML += `<tr><td>${r[0]}</td><td class="num">${r[1]}</td><td class="num">${r[2]}</td><td class="num ${cls}">${r[3]}</td></tr>`;
+});
+
+// --- individual table ---
+const itbody = document.getElementById("individual-table-body");
+INDIVIDUALS.forEach(r=>{
+  const cls = diffClass(r[5]);
+  itbody.innerHTML += `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td class="num">${r[3]}</td><td class="num">${r[4]}</td><td class="num ${cls}">${r[5]}</td></tr>`;
+});
+
+// --- accordion ---
+const acc = document.getElementById("accordion");
+const labels = ["5","4","3","2","1"];
+QUESTIONS.forEach((q,i)=>{
+  const item = document.createElement("div");
+  item.className = "acc-item";
+  const distHtml = q.dist.map((c,idx)=>`<div class="seg"><span class="c">${c}</span><span class="l">スコア${labels[idx]}</span></div>`).join("");
+  const groupsHtml = q.groups.map(g=>`<div class="grp"><b>スコア${g[0]}（${g[1].length}名）</b>${g[1].join("、")}</div>`).join("");
+  item.innerHTML = `
+    <div class="acc-head" onclick="this.parentElement.classList.toggle('open')">
+      <span class="qid">${q.id}</span>
+      <span class="qtext">${q.text}</span>
+      <span class="qavg">${q.now.toFixed(2)}</span>
+      <span class="chev">▾</span>
+    </div>
+    <div class="acc-body">
+      <div class="acc-inner">
+        <div class="acc-meta">
+          <span>今回平均 <b>${q.now.toFixed(2)} / 5.00</b></span>
+          <span>前回平均 <b>${q.prev.toFixed(2)}</b></span>
+          <span>差分 <b>${q.diff}</b></span>
+        </div>
+        <div class="mini-dist">${distHtml}</div>
+        <div class="name-groups">${groupsHtml}</div>
+      </div>
+    </div>
+  `;
+  acc.appendChild(item);
+});
+</script>
+</body>
+</html>
